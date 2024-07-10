@@ -39,18 +39,17 @@
 // ==============================================================================================
 
 //Définition des broches nécessaires au bon fonctionnement du code
-#define PIN_SERIAL_RX  25 //Allant sur le port UART TxD du capteur
-#define PIN_SERIAL_TX  21 //Allant sur le port UART RxD du capteur
-#define PIN_CAL  33       //Allant sur le port CAL du capteur
+#define PIN_SERIAL_RX 25  //Allant sur le port UART TxD du capteur
+#define PIN_SERIAL_TX 21  //Allant sur le port UART RxD du capteur
 
 //Définition des seuils de qualité de l'air
-#define LIMITE_BASSE 300                      // Si en dessous passe le capteur en erreur (air extérieur 400 PPM en moyenne)
-#define AIR_MOYEN 800                         // Capteur en vert avant cette limite de PPM
-#define AIR_MEDIOCRE 1000                     // Capteur en orange avant cette limite de PPM
-#define AIR_VICIE 1500                        // Capteur en rouge avant cette limite de PPM (au delà il clignotte)
+#define LIMITE_BASSE 300   // Si en dessous passe le capteur en erreur (air extérieur 400 PPM en moyenne)
+#define AIR_MOYEN 800      // Capteur en vert avant cette limite de PPM
+#define AIR_MEDIOCRE 1000  // Capteur en orange avant cette limite de PPM
+#define AIR_VICIE 1500     // Capteur en rouge avant cette limite de PPM (au delà il clignotte)
 
 //converti directement les secondes en millisecondes.
-#define ATTENTE_CHECK_CO2 1 * 1000    //nb secondes * (milisecondes dans une secondes)
+#define ATTENTE_CHECK_CO2 1 * 1000  //nb secondes * (milisecondes dans une secondes)
 
 //Temps (milisecondes) nécessaire à l'utilisateur pour demander une calibration du capteur
 #define TEMPS_BTN_APPUYER 3 * 1000
@@ -151,13 +150,13 @@ void setup() {
   for (int x = 0; x < TEMPS_DEMARRAGE; x++) {
     for (int i = 120; i < 255; i++) {
       for (int j = 0; j < 25; j++) {
-        M5.dis.drawpix( j, CHSV( 0, 0, i));
+        M5.dis.drawpix(j, CHSV(0, 0, i));
       }
       delay(TEMPO_ANIMATION);
     }
     for (int i = 255; i > 120; i--) {
       for (int j = 0; j < 25; j++) {
-        M5.dis.drawpix( j, CHSV( 0, 0, i));
+        M5.dis.drawpix(j, CHSV(0, 0, i));
       }
       delay(TEMPO_ANIMATION);
     }
@@ -188,7 +187,7 @@ void loop() {
     //Animation de "fade-out" lors de l'affichage du CO2
     for (int i = 10; i > 0; i--) {
       for (int j = 0; j < 25; j++) {
-        M5.dis.drawpix( j, CHSV( colorVal, 255, i * 25));
+        M5.dis.drawpix(j, CHSV(colorVal, 255, i * 25));
       }
       delay(TEMPO_ANIMATION);
     }
@@ -199,7 +198,7 @@ void loop() {
     //Animation de "fade-in" lors de l'affichage du CO2
     for (int i = 0; i < 20; i++) {
       for (int j = 0; j < 25; j++) {
-        M5.dis.drawpix( j, CHSV( colorVal, 255, i * 12));
+        M5.dis.drawpix(j, CHSV(colorVal, 255, i * 12));
       }
       delay(TEMPO_ANIMATION);
     }
@@ -235,17 +234,8 @@ void sendRequestCalibration() {
       displayError();
     } else {
       //Animation du capteur durant le calibrage.
-      for (int i = 100; i < 200; i++) {
-        for (int j = 0; j < 25; j++) {
-          M5.dis.drawpix( j, CHSV( COULEUR_CALIBRATION, 255, i));
-        }
-        delay(TEMPO_ANIMATION);
-      }
-      for (int i = 200; i > 100; i--) {
-        for (int j = 0; j < 25; j++) {
-          M5.dis.drawpix( j, CHSV( COULEUR_CALIBRATION, 255, i));
-        }
-        delay(TEMPO_ANIMATION);
+      for (int j = 0; j < 25; j++) {
+        M5.dis.drawpix(j, CHSV(COULEUR_CALIBRATION, 255, 255));
       }
     }
   }
@@ -267,22 +257,22 @@ void checkCO2(unsigned long co2) {
 
     // ============ CAPTEUR : AIR EXCELLENT // code couleur : vert ==== //
 
-  } else if (co2 >= LIMITE_BASSE && co2 < (AIR_MOYEN - ANIMATION_OFFSET) ) {
+  } else if (co2 >= LIMITE_BASSE && co2 < (AIR_MOYEN - ANIMATION_OFFSET)) {
     //Permet d'afficher toutes les leds du m5stack atom en vert
     for (int i = 0; i < 25; i++) {
-      colorVal = 100;                                          //selectionnez la couleur verte
-      M5.dis.drawpix( i, CHSV( colorVal, 255, 255));
+      colorVal = 100;  //selectionnez la couleur verte
+      M5.dis.drawpix(i, CHSV(colorVal, 255, 255));
     }
     Serial.println("Excellent.");
 
     // ============ CAPTEUR : AIR MOYEN // code couleur : orange ==== //
 
-  } else if (co2 >=  (AIR_MOYEN - ANIMATION_OFFSET) && co2 < (AIR_MEDIOCRE + ANIMATION_OFFSET) ) {
+  } else if (co2 >= (AIR_MOYEN - ANIMATION_OFFSET) && co2 < (AIR_MEDIOCRE + ANIMATION_OFFSET)) {
     //selectionnez une teinte de orange en fonction de l'état du CO2
     colorVal = map(co2, (AIR_MOYEN - ANIMATION_OFFSET), (AIR_MEDIOCRE + ANIMATION_OFFSET), 100, 0);
     //Permet d'afficher toutes les leds du m5stack atom en orange
     for (int i = 0; i < 25; i++) {
-      M5.dis.drawpix( i, CHSV( colorVal, 255, 255));
+      M5.dis.drawpix(i, CHSV(colorVal, 255, 255));
     }
     Serial.println("Moyen.");
 
@@ -291,40 +281,39 @@ void checkCO2(unsigned long co2) {
   } else if (co2 >= (AIR_MEDIOCRE + ANIMATION_OFFSET) && co2 < AIR_VICIE) {
     //Permet d'afficher toutes les leds du m5stack atom en rouge
     for (int i = 0; i < 25; i++) {
-      colorVal = 0;                                         //selectionnez la couleur rouge
-      M5.dis.drawpix( i, CHSV( 0, 255, 255));
+      colorVal = 0;  //selectionnez la couleur rouge
+      M5.dis.drawpix(i, CHSV(0, 255, 255));
     }
     Serial.println("Médiocre.");
 
     // ============ CAPTEUR : AIR TRES MAUVAIS // code couleur : rouge clignotant ==== //
 
   } else {
-    colorVal = 0;                                         //selectionnez la couleur rouge
+    colorVal = 0;  //selectionnez la couleur rouge
     //Permet d'afficher une animation de led rouge clignotante (seuil haut dépassé).
     if (AnimSequence == 1) {
       //Animation de "fade-out" lors du clignottement
       for (int i = 20; i > 0; i--) {
         for (int j = 0; j < 25; j++) {
-          M5.dis.drawpix( j, CHSV( colorVal, 255, i * 12));
+          M5.dis.drawpix(j, CHSV(colorVal, 255, i * 12));
         }
         delay(TEMPO_ANIMATION);
       }
       AnimSequence = 0;
       for (int i = 0; i < 25; i++) {
-        M5.dis.drawpix( i, CHSV( colorVal, 0, 0));
+        M5.dis.drawpix(i, CHSV(colorVal, 0, 0));
       }
-    }
-    else if (AnimSequence == 0) {
+    } else if (AnimSequence == 0) {
       //Animation de "fade-in" lors du clignottement
       for (int i = 0; i < 20; i++) {
         for (int j = 0; j < 25; j++) {
-          M5.dis.drawpix( j, CHSV( colorVal, 255, i * 12));
+          M5.dis.drawpix(j, CHSV(colorVal, 255, i * 12));
         }
         delay(TEMPO_ANIMATION);
       }
       AnimSequence = 1;
       for (int i = 0; i < 25; i++) {
-        M5.dis.drawpix( i, CHSV( colorVal, 255, 255));
+        M5.dis.drawpix(i, CHSV(colorVal, 255, 255));
       }
     }
     Serial.println("Vicié.");
@@ -338,7 +327,7 @@ void displayError() {
     //Permet d'afficher une animation infinie d'erreur (nécéssitera de redébrancher le capteur).
     int PixNum = random(0, 25);
     int NoisePix = random(20, 200);
-    M5.dis.drawpix( PixNum, CHSV( 0, 0, NoisePix));
+    M5.dis.drawpix(PixNum, CHSV(0, 0, NoisePix));
     delay(TEMPO_ANIMATION);
   }
 }
