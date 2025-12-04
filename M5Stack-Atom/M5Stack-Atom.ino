@@ -24,10 +24,6 @@
    @CC-BY-SA - 2022
 */
 
-#ifndef ARDUINO_M5Stack_ATOM
-#error "Ce code est supporté uniquement sur les cartes m5stack atom."
-#endif
-
 #include "SenseairS8.h"
 #include "MatrixDisplayNumbers.h"
 #include <M5Atom.h>
